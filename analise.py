@@ -14,7 +14,7 @@ groupTotAno = df.groupby(df['ano']).sum()
 groupTotAno = groupTotAno.reset_index()
 groupTotAno.drop(axis=1, columns=['mes', 'numero_consumidores'], inplace=True)
 
-# consumo em Gigawatt-hora, dividido x100000 vezes e inteiro para facilitar
+# consumo em Gigawatt-hora e inteiro para facilitar
 groupTotAno['consumo'] = (groupTotAno['consumo']/1000).astype('int64')
 
 
@@ -27,12 +27,11 @@ plt.show()
 
 
 # Média de consumo por anos
-groupMedianAno = df.groupby(df['ano']).median()
+groupMedianAno = df.groupby(df['ano']).mean()
 groupMedianAno = groupMedianAno.reset_index()
 groupMedianAno.drop(axis=1, columns=['mes', 'numero_consumidores'], inplace=True)
 
-# consumo em Gigawatt-hora, dividido x100000 vezes e inteiro para facilitar
-# groupMedianAno['consumo'] = (groupMedianAno['consumo']/100000000).astype('int64')
+# consumo em Gigawatt-hora e inteiro para facilitar
 
 plt.title("Gráfico da média de consumo a cada ano")
 plt.xlabel("Ano")
@@ -40,6 +39,8 @@ plt.ylabel("Consumo Médio")
 plt.bar(groupMedianAno['ano'],groupMedianAno['consumo'])
 plt.show()
 
+
+print(df.groupby(df['ano'])['consumo'].agg([sum,'mean']))
 
 
 # Bucketsize
