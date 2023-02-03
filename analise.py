@@ -1,6 +1,7 @@
 import basedosdados as bd
 import matplotlib.pyplot as plt
 import pandas as pd
+
 # Para carregar o dado direto no pandas
 df = bd.read_table(dataset_id='br_mme_consumo_energia_eletrica',
                    table_id='uf', billing_project_id="robust-slice-376003")
@@ -9,24 +10,52 @@ print(df.info())
 
 # Evolução do consumo de energia elétrica no Brasil nos últimos 10 anos
 
-groupAno = df.groupby(df['ano']).sum()
-groupAno = groupAno.reset_index()
-groupAno.drop(axis=1, columns=['mes', 'numero_consumidores'], inplace=True)
+groupTotAno = df.groupby(df['ano']).sum()
+groupTotAno = groupTotAno.reset_index()
+groupTotAno.drop(axis=1, columns=['mes', 'numero_consumidores'], inplace=True)
 
-# consumo em Gigawatt-hora e inteiro para facilitar
-groupAno['consumo'] = (groupAno['consumo']/1000).astype('int64')
+# consumo em Gigawatt-hora, dividido x100000 vezes e inteiro para facilitar
+groupTotAno['consumo'] = (groupTotAno['consumo']/1000).astype('int64')
 
 
 plt.title("Gráfico do consumo de energia por ano")
 plt.xlabel("Ano")
 plt.ylabel("Consumo em GWh")
-plt.scatter(groupAno['ano'], groupAno['consumo'])
+plt.plot(groupTotAno['ano'],groupTotAno['consumo'])
+plt.scatter(data=groupTotAno, x="ano", y="consumo")
 plt.show()
 
 
-# Consumo por anos em porcentagem
+# Média de consumo por anos
+groupMedianAno = df.groupby(df['ano']).median()
+groupMedianAno = groupMedianAno.reset_index()
+groupMedianAno.drop(axis=1, columns=['mes', 'numero_consumidores'], inplace=True)
+
+# consumo em Gigawatt-hora, dividido x100000 vezes e inteiro para facilitar
+# groupMedianAno['consumo'] = (groupMedianAno['consumo']/100000000).astype('int64')
+
+plt.title("Gráfico da média de consumo a cada ano")
+plt.xlabel("Ano")
+plt.ylabel("Consumo Médio")
+plt.bar(groupMedianAno['ano'],groupMedianAno['consumo'])
+plt.show()
 
 
+
+# Bucketsize
+
+# def bucketize(point: float, bucket_size: float) -> float:
+#     return bucket_size * math.floor(point/bucket_size)
+
+# def make_histogram(points:List[float], bucket_size:float) -> Dict[float,int]:
+#     return Counter(bucketize(point,bucket_size) for point in points)
+
+# def plot_histogram(points: List[float],bucket_size:float,title:str=""):
+#     histogram = make_histogram(points,bucket_size)
+#     plt.bar(histogram.keys(),histogram.values(),width=bucket_size)
+#     plt.title(title)
+
+# plot_histogram()
 
 # Comparação do consumo de energia elétrica por estado e região
 
