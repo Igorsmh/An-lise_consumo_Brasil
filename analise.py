@@ -9,7 +9,7 @@ df = bd.read_table(dataset_id='br_mme_consumo_energia_eletrica',
 print(df.info())
 
 
-# Evolução do consumo de energia elétrica no Brasil nos últimos 10 anos
+#### Evolução do consumo de energia elétrica no Brasil nos últimos 10 anos
 
 group_consumo_ano = df.groupby(df['ano'])['consumo'].agg([sum, 'mean'])
 group_consumo_ano = group_consumo_ano.reset_index()
@@ -22,7 +22,7 @@ plt.plot(group_consumo_ano['ano'], group_consumo_ano['sum'])
 plt.scatter(data=group_consumo_ano, x="ano", y="sum")
 plt.show()
 
-#
+
 plt.title("Gráfico da média de consumo a cada ano")
 plt.xlabel("Ano")
 plt.ylabel("Consumo Médio em MWh")
@@ -31,25 +31,27 @@ plt.show()
 
 
 
-# verificar alteração no consumo por quantidade de consumidores
+#### verificar alteração no consumo por quantidade de consumidores
 
-# Bucketsize
 
-# def bucketize(point: float, bucket_size: float) -> float:
-#     return bucket_size * math.floor(point/bucket_size)
+df.fillna(0,inplace=True)
 
-# def make_histogram(points:List[float], bucket_size:float) -> Dict[float,int]:
-#     return Counter(bucketize(point,bucket_size) for point in points)
+# Plotando os dados de número de consumidores e consumo juntos no mesmo gráfico
+plt.bar(df['ano'], df['numero_consumidores'], label='Número de consumidores')
+plt.bar(df['ano'], df['consumo'], label='Consumo')
 
-# def plot_histogram(points: List[float],bucket_size:float,title:str=""):
-#     histogram = make_histogram(points,bucket_size)
-#     plt.bar(histogram.keys(),histogram.values(),width=bucket_size)
-#     plt.title(title)
+# Adicionando rótulos ao eixo x e y, título e legenda
+plt.xlabel('Anos')
+plt.ylabel('Número de consumidores / Consumo')
+plt.title('Evolução do número de consumidores e consumo ao longo dos anos')
+plt.legend()
 
-# plot_histogram()
+# Mostrando o gráfico
+plt.show()
 
 # Comparação do consumo de energia elétrica por estado e região
 
+#Comparar o aumento do consumo com o tipo de consumo (Residencial,comum, industrial,etc...)
 
 # Consumo de cada estado de 2004 a 2021
 
@@ -58,4 +60,5 @@ plt.show()
 
 
 # Análise do impacto do uso de fontes de energia renováveis no consumo de energia elétrica
+
 # Análise da eficiência energética em diferentes setores da economia brasileira.
