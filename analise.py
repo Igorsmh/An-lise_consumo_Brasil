@@ -9,7 +9,7 @@ df = bd.read_table(dataset_id='br_mme_consumo_energia_eletrica',
 print(df.info())
 
 
-#### Evolução do consumo de energia elétrica no Brasil nos últimos 10 anos
+# Evolução do consumo de energia elétrica no Brasil nos últimos 10 anos
 
 group_consumo_ano = df.groupby(df['ano'])['consumo'].agg([sum, 'mean'])
 group_consumo_ano = group_consumo_ano.reset_index()
@@ -30,17 +30,18 @@ plt.bar(group_consumo_ano['ano'], group_consumo_ano['mean'])
 plt.show()
 
 
+# verificar alteração no consumo por quantidade de consumidores
 
-#### verificar alteração no consumo por quantidade de consumidores
-
-consumi_ano = df.groupby(by=['ano']).agg(Consumidores = ('numero_consumidores',sum))
+consumi_ano = df.groupby(by=['ano']).agg(
+    Consumidores=('numero_consumidores', sum))
 consumi_ano.reset_index(inplace=True)
-consumi_ano.fillna(0,inplace=True)
+consumi_ano.fillna(0, inplace=True)
 
 
 # Plotando os dados de número de consumidores e consumo juntos no mesmo gráfico
 plt.bar(group_consumo_ano['ano'], group_consumo_ano['sum'], label='Consumo')
-plt.bar(consumi_ano['ano'], consumi_ano['Consumidores'], label='Número de consumidores')
+plt.bar(consumi_ano['ano'], consumi_ano['Consumidores'],
+        label='Número de consumidores')
 
 # Adicionando rótulos ao eixo x e y, título e legenda
 plt.xlabel('Anos')
@@ -52,6 +53,20 @@ plt.legend()
 plt.show()
 
 # Comparação do consumo de energia elétrica por estado e região
+
+consumo_por_regiao = pd.pivot_table(df,index = 'ano',columns = 'sigla_uf',values='consumo')
+
+# Plotando os dados 
+
+plt.plot(consumo_por_regiao)
+
+# Adicionando rótulos ao eixo x e y, título e legenda
+plt.xlabel('Ano')
+plt.ylabel('Consumo')
+plt.title('Consumo de energia por estado')
+plt.legend()
+
+plt.show()
 
 #Comparar o aumento do consumo com o tipo de consumo (Residencial,comum, industrial,etc...)
 
