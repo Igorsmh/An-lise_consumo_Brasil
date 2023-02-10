@@ -33,12 +33,14 @@ plt.show()
 
 #### verificar alteração no consumo por quantidade de consumidores
 
+consumi_ano = df.groupby(by=['ano']).agg(Consumidores = ('numero_consumidores',sum))
+consumi_ano.reset_index(inplace=True)
+consumi_ano.fillna(0,inplace=True)
 
-df.fillna(0,inplace=True)
 
 # Plotando os dados de número de consumidores e consumo juntos no mesmo gráfico
-plt.bar(df['ano'], df['numero_consumidores'], label='Número de consumidores')
-plt.bar(df['ano'], df['consumo'], label='Consumo')
+plt.bar(group_consumo_ano['ano'], group_consumo_ano['sum'], label='Consumo')
+plt.bar(consumi_ano['ano'], consumi_ano['Consumidores'], label='Número de consumidores')
 
 # Adicionando rótulos ao eixo x e y, título e legenda
 plt.xlabel('Anos')
